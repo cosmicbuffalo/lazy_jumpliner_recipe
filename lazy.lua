@@ -45,7 +45,6 @@ return {
   },
   {
     "echasnovski/mini.jump",
-    enabled = vim.g.lazy_jumpliner_recipe_enable_mini_jump or false,
     keys = { "f", "F", "t", "T" },
     dependencies = {
       {
@@ -57,6 +56,10 @@ return {
       },
     },
     config = function(_, opts)
+      if not vim.g.lazy_jumpliner_recipe_enable_mini_jump then
+        return
+      end
+
       require("mini.jump").setup(opts)
 
       -- Add escape key listener to stop mini.jump

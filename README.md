@@ -8,6 +8,10 @@ This `Lazy.nvim` recipe provides a simple way to integrate both `mini.jump` and 
 
 ```lua
 return {
-  "cosmicbuffalo/lazy_jumpliner_recipe",
+    "cosmicbuffalo/lazy_jumpliner_recipe",
+    opts = {
+        enable_eyeliner_by_default = true,
+        enable_mini_jump = true,
+    },
 }
 ```
