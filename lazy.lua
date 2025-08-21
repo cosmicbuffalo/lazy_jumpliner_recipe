@@ -1,7 +1,9 @@
 -- lazy.lua
 -- This file is automatically picked up by lazy.nvim when this recipe repo is
 -- loaded as a plugin. Any plugins and configurations can be defined here the
--- samy way as they would be in a normal lazy configuration file.
+-- same way as they would be in a normal lazy configuration file.
+-- To get config from the recipe into the nested plugin, use vim.g variables and
+-- override them in the config function.
 return {
   {
     "cosmicbuffalo/eyeliner.nvim",
@@ -11,7 +13,6 @@ return {
       { "<leader>uf", "<cmd>ToggleFTHighlighting<cr>", desc = "Toggle f/t highlight" },
     },
     opts = {
-      enabled_by_default = vim.g.lazy_jumpliner_recipe_enable_eyeliner_by_default,
       highlight_on_key = true,
       dim = false,
       primary_highlight_color = "white",
@@ -20,10 +21,13 @@ return {
       disabled_filetypes = { "NerdTree", "NvimTree", "NeoTree", "neo-tree" },
     },
     config = function(_, opts)
+      local default_keymaps = not vim.g.lazy_jumpliner_recipe_enable_mini_jump
+      opts.default_keymaps = default_keymaps
+
       local eyeliner = require("eyeliner")
       eyeliner.setup(opts)
 
-      if not opts.enabled_by_default then
+      if not vim.g.lazy_jumpliner_recipe_enable_eyeliner_by_default then
         eyeliner.disable()
       end
 
@@ -46,15 +50,6 @@ return {
   {
     "echasnovski/mini.jump",
     keys = { "f", "F", "t", "T" },
-    dependencies = {
-      {
-        "cosmicbuffalo/eyeliner.nvim",
-        opts = {
-          -- TODO: make sure this only applies when mini.jump is enabled
-          default_keymaps = false,
-        },
-      },
-    },
     config = function(_, opts)
       if not vim.g.lazy_jumpliner_recipe_enable_mini_jump then
         return
@@ -73,6 +68,11 @@ return {
           MiniJump.stop_jumping()
         end
       end)
+
+      -- Enabling eyeliner.on-key sets up the autocmd to remove highlights on cursor move
+      local utils = require("eyeliner.utils")
+      utils["create-augroup"]("Eyeliner", {clear = true})
+      require("eyeliner.on-key").enable()
 
       local eyeliner_highlight = function()
         require("eyeliner").highlight({
