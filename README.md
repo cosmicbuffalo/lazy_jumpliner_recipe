@@ -10,8 +10,8 @@ This `Lazy.nvim` recipe provides a simple way to integrate both `mini.jump` and 
 return {
     "cosmicbuffalo/lazy_jumpliner_recipe",
     opts = {
-        enable_eyeliner_by_default = true,
-        enable_mini_jump = true,
+        enable_eyeliner_by_default = true, -- when this is false, you can enable it with the keymap `<leader>uf`
+        enable_mini_jump = true, -- set to false if you don't want mini.jump
     },
 }
 ```
