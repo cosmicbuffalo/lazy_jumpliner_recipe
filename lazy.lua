@@ -35,7 +35,7 @@ return {
       vim.api.nvim_set_hl(0, "EyelinerPrimary", { fg = opts.primary_highlight_color, bold = true, underline = true })
       vim.api.nvim_set_hl(0, "EyelinerSecondary", { fg = opts.secondary_highlight_color, underline = true })
 
-      local eyeliner_enabled = require("eyeliner.main")["enabled?"]
+      local eyeliner_enabled = eyeliner.is_enabled()
       vim.api.nvim_create_user_command("ToggleFTHighlighting", function()
         if eyeliner_enabled() then
           eyeliner.disable()
@@ -69,10 +69,10 @@ return {
         end
       end)
 
-      -- Enabling eyeliner.on-key sets up the autocmd to remove highlights on cursor move
+      -- Enabling eyeliner.handler sets up the autocmd to remove highlights on cursor move
       local utils = require("eyeliner.utils")
-      utils["create-augroup"]("Eyeliner", {clear = true})
-      require("eyeliner.on-key").enable()
+      utils.create_augroup("Eyeliner", {clear = true})
+      require("eyeliner.handler").enable()
 
       local eyeliner_highlight = function()
         require("eyeliner").highlight({
